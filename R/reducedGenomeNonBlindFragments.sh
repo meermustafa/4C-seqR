@@ -57,7 +57,7 @@ genome=hg19
 enzyme2=dpnii
 
 # digest the genome and produce a bed file of nonblind VP intervals
-Rscript 4C_createFragmentLibrary.R ${enzyme}.fa ${enzyme2}.fa 50 ${genome}_${enzyme}_restriction_sites_nonblind_viewpoints.bed
+Rscript 4C_createFragmentLibrary.R ${enzyme}.fa ${enzyme2}.fa 50 ${genome}_${enzyme}_restriction_sites_nonblind_viewpoints.bed 
 
 # if numbers are round (e.g. 7000000), they will be concatenated into 7e6 and bedtools cannot recognize those numbers for parsing
 Rscript disableScientificNotationR.R ${genome}_${enzyme}_restriction_sites_nonblind_viewpoints.bed ${genome}_${enzyme}_restriction_sites_nonblind_viewpoints.bed
@@ -94,7 +94,7 @@ grep -v '^>' ${genome}_${enzyme}_flanking_sequences_${fl}_unique_2.fa | sort | u
 # rm Prime3_viewpoint_intervals.txt
 
 
-# make a BED file of unique sequences
+# make a BED file of the unique FASTA sequences
 grep '^>' ${genome}_${enzyme}_flanking_sequences_${fl}_unique.fa > ${genome}_${enzyme}_flanking_sites_${fl}_unique.bed
 # remove the '>'
 sed -i 's/>//g' ${genome}_${enzyme}_flanking_sites_${fl}_unique.bed

@@ -17,30 +17,32 @@ THREADS=6
 BOWTIEFASTA='hg19_csp6i_flanking_sequences_50_unique.fa'  #ls *unique.fa
 BOWTIEIDX='hg19_csp6i_flanking_sequences_50_unique' # ls *unique.fa stripped of fa name
 
-
+# build index
+bowtie2-build ${BOWTIEFASTA} ${BOWTIEIDX}
 
 
 # use the fq env. variable to name all other files
 for fq in ${INPUT[@]}; do
-    echo "about to work on fastq file ${fq}"
+    echo "About to work on fastq file ${fq}"
 
 
-    echo " ; \
-    bowtie -v 1 -m 1 hg19_fragment_50_reducedGenome -q ${fq} ${fq}.btie.fq; cat ${fq}.btie.fq | cut -f 3 | sort | uniq -c | sort -rn > ${fq}.trim.bowtie.results " | qsub -V -cwd -m abe -M mmustafa@nygenome.org -N ${fq}_job -pe smp ${THREADS}
+    echo " bowtie2 -p ${THREADS} -N 0 \
+	--un ${fq}.sam \
+	-x ${BOWTIEIDX} \
+	-U ${fq} \
+	-S ${fq}.sam " | qsub -V -cwd -m abe -M mmustafa@nygenome.org -N ${fq}_job -pe smp ${THREADS}
 
-    echo "all done!"
+    echo "Submitted!"
 done
 	
 
 
-bowtie2-build mm10_hindiii_flanking_sequences_25_unique.fa mm10_hindiii_flanking_sequences_25_unique
 
-
-bowtie2 -p 12 -N 0 \
-	--un sample_unaligned.sam \
-	-x mm10_hindiii_flanking_sequences_25_unique \
-	-U sample.fastq \
-	-S sample_aligned.sam
+bowtie2 -p ${THREADS} -N 0 \
+	--un ${fq}.sam \
+	-x ${BOWTIEIDX} \
+	-U {fq} \
+	-S ${fq}.sam
 
 
 
@@ -65,3 +67,7 @@ command3 #execute once command1 ended
 
 # bowtie2
 # -5 option can be used to trim the first ‘x’ bps that contain the barcode (if present)
+# -un write out unaligned reads to a file
+# -U is the input FASTQ file name
+# -S is the output SAM file name
+# -x is prefix database name
