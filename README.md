@@ -16,10 +16,13 @@ Create bowtie index of the FASTA. Align the FASTQ reads to the digested genome.
 
 ## Checks
 Does 50% of reads map to the same chromosome as the viewpoint? (cis interactions)
+
 Optional: What percentage of reads map within the topologically associated domain (TAD) as the viewpoint? (cis interactions)
 
 
 ## Analysis
 Normalization
+
 Comparisons across conditions (e.g. across cell types, experiments, treatments)
+
 Calling significantly interacting regions with associated p-value
